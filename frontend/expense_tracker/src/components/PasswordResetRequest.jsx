@@ -69,7 +69,7 @@ const PasswordResetRequest = () => {
       }
       try {
         const res = await axios.post(
-          "http://localhost:4000/api/passwordresetcode",
+          "https://customer-bill-generator-bckend.onrender.com/api/passwordresetcode",
           { email }
         );
         setMessage("OTP has been sent successfully");
@@ -121,7 +121,7 @@ const PasswordResetRequest = () => {
       }
       try {
         const res = await axios.post(
-          "http://localhost:4000/api/passwordresetcodeverify",
+          "https://customer-bill-generator-bckend.onrender.com/api/passwordresetcodeverify",
           { code: otp }
         );
         setMessage("OTP verified! You can now reset your password.");
