@@ -326,7 +326,7 @@ const ProductLists = () => {
 
         for (const product of products) {
           const res1 = await axios.post(
-            "http://localhost:4000/api/manageproduct",
+            "https://customer-bill-generator-bckend.onrender.com/api/manageproduct",
             {
               shopId: mainShopId,
               productName: product.name,
@@ -344,7 +344,7 @@ const ProductLists = () => {
           amount: parseFloat(product.amount),
         }));
 
-        await axios.post("http://localhost:4000/api/productsell", {
+        await axios.post("https://customer-bill-generator-bckend.onrender.com/api/productsell", {
           shopId: mainShopId,
           userId,
           customerId,
