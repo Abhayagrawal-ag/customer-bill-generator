@@ -27,8 +27,16 @@ const generateBill = async (req, res) => {
     const billsFolder = path.resolve("./bills");
     if (!fs.existsSync(billsFolder)) fs.mkdirSync(billsFolder);
     const filePath = path.join(billsFolder, `bill-${sale._id}.pdf`);
+    // Pipe to file (keep server record)
     doc.pipe(fs.createWriteStream(filePath));
 
+    // Pipe to response (client download) - Set headers FIRST
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="bill-${customer.customerName}.pdf"`
+    );
+    doc.pipe(res);
 
     // shopdetails
     doc
@@ -38,25 +46,29 @@ const generateBill = async (req, res) => {
         underline: "true",
       });
     doc.moveDown(0.5);
-    doc.fontSize(12).text(shop.shopAddress, { align: "center" });
-    doc.text(`Phone: ${shop.shopPhoneNumber}`, { align: "center" });
-    doc.text(`GST: ${shop.GST_number}`, { align: "center" });
-    doc.text(`Shopkeeper: ${shopkeeper.username}`, { align: "center" });
+    doc
+      .fontSize(12)
+      .text(`Address: ${shop.shopAddress}`, { align: "center" });
+
+    doc.text(`Mobile no.: ${shop.shopPhoneNumber}`, { align: "center" });
+    doc.text(`GST number: ${shop.GST_number}`, { align: "center" });
+    doc.text(`Shopkeeper Name: ${shopkeeper.username}`, { align: "center" });
     doc.moveDown(1);
 
     // customerdetails
     doc.fontSize(12).text(`Customer Name: ${customer.customerName}`);
-    doc.text(`Phone: ${customer.mobileNumber}`);
+    doc.text(`Phone number: ${customer.mobileNumber}`);
     doc.text(`Date: ${sale.soldOn.toLocaleDateString()}`);
     doc.moveDown(1);
 
+    const tableTop = doc.y;
     doc
       .font("Helvetica-Bold")
-      .text("S.No", 50, doc.y)
-      .text("Product", 120, doc.y)
-      .text("Qty", 300, doc.y ,{ width: 50, align: "right" })
-      .text("Price", 370, doc.y, { width: 60, align: "right" })
-      .text("Total", 440, doc.y, { width: 60, align: "right" });
+      .text("S.No", 50, tableTop)
+      .text("Products", 120, tableTop)
+      .text("Qty", 300, tableTop, { width: 50, align: "right" })
+      .text("Price", 370, tableTop, { width: 60, align: "right" })
+      .text("Total", 440, tableTop, { width: 60, align: "right" });
     doc.moveDown(0.5);
     doc.font("Helvetica").text("-".repeat(95));
     doc.moveDown(0.5);
@@ -68,16 +80,14 @@ const generateBill = async (req, res) => {
       const lineTotal = p.amount;
       totalAmount += lineTotal;
 
-      
-
       doc
         .font("Helvetica")
         .text(i + 1, 50, yPos)
-        .text(p.product.productName, 120,  yPos)
-        .text(String(p.quantity), 300,  yPos, { width: 50, align: "right" })
-        .text(`₹${p.product.productPrice}`, 370,  yPos, { width: 50, align: "right" } )
-        .text(`₹${lineTotal}`, 450,  yPos, { width: 50, align: "right" });
-         yPos += lineHeight;
+        .text(p.product.productName, 120, yPos, { width: 170 }) // Added width to prevent overlap
+        .text(String(p.quantity), 300, yPos, { width: 50, align: "right" })
+        .text(`Rs. ${p.product.productPrice}`, 370, yPos, { width: 50, align: "right" }) // Changed ₹ to Rs.
+        .text(`Rs. ${lineTotal}`, 450, yPos, { width: 50, align: "right" }); // Changed ₹ to Rs.
+      yPos += lineHeight;
     });
     doc.moveTo(50, yPos + 5).lineTo(510, yPos + 5).stroke();
     yPos += 20;
@@ -85,7 +95,7 @@ const generateBill = async (req, res) => {
     doc
       .fontSize(13)
       .font("Helvetica-Bold")
-      .text(`Total Amount: ₹${totalAmount}` , 370, yPos,  { align: "right" });
+      .text(`Total Amount: Rs. ${totalAmount}`, 370, yPos, { align: "right" }); // Changed ₹ to Rs.
     yPos += 30;
 
     doc
@@ -94,34 +104,13 @@ const generateBill = async (req, res) => {
       .text("Thank you for shopping with us!", 0, yPos, { align: "center" });
     doc.moveDown(0.3).text("Visit Again!", { align: "center" });
 
-   
+
 
     // Send PDF
-    // doc.on("finish", () => {
-    //   res.download(filePath, `bill-${customer.customerName}.pdf`, (err) => {
-    //     if (err) console.error(err);
-    //     fs.unlinkSync(filePath);
-    //   });
-    // });
-    doc.on("finish", () => {
-  const fileStream = fs.createReadStream(filePath);
-  res.setHeader("Content-Type", "application/pdf");
-  res.setHeader(
-    "Content-Disposition",
-    `inline; filename="bill-${customer.customerName}.pdf"`
-  );
-  fileStream.pipe(res);
+    // Finalize PDF file
+    doc.end();
 
-  // Optional: delete file after sending
-  fileStream.on("end", () => {
-    fs.unlinkSync(filePath);
-  });
-});
-    
-       
-      
-    // });
-     doc.end();
+
   } catch (error) {
     console.error("Error generating bill:", error);
     res.status(500).json({ message: "Internal Server Error" });

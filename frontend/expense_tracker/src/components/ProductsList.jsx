@@ -154,7 +154,7 @@
 //                     Action
 //                   </label>
 //                 </div>
-               
+
 //               </div>
 //             )}
 
@@ -359,7 +359,7 @@ const ProductLists = () => {
       } catch (error) {
         setError(
           error.response?.data?.message ||
-            "server error, please try again"
+          "server error, please try again"
         );
         setTimeout(() => setError(""), 1000);
       }
@@ -395,7 +395,7 @@ const ProductLists = () => {
 
             {/* Header */}
             {products.length > 0 && (
-              <div className="hidden md:flex justify-between font-bold text-black px-2">
+              <div className="hidden md:flex gap-2 font-bold text-black px-2 items-center">
                 <span className="w-[250px]">Product</span>
                 <span className="w-[120px]">Price</span>
                 <span className="w-[80px]">Qty</span>
@@ -408,7 +408,7 @@ const ProductLists = () => {
             {products.map((product, index) => (
               <div
                 key={index}
-                className="flex flex-col md:flex-row gap-3 md:gap-2 items-center"
+                className="flex flex-col md:flex-row gap-4 md:gap-2 items-center"
               >
                 <input
                   type="text"
@@ -451,7 +451,7 @@ const ProductLists = () => {
                 <button
                   type="button"
                   onClick={() => handleDeleteProduct(index)}
-                  className="bg-red-700 text-white px-4 py-2 rounded-lg w-full md:w-auto"
+                  className="bg-red-700 text-white px-4 py-2 rounded-lg w-full md:w-[80px]"
                 >
                   Delete
                 </button>

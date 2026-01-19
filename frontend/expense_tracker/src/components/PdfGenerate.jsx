@@ -45,7 +45,7 @@
 //         console.log("Selected Customer ID:", selectedCustomerId);
 //         const response = await axios.get(
 //           `http://localhost:4000/api/generatebill/${selectedCustomerId}`,
-          
+
 //           { responseType: "blob" }
 //         );
 //         const blob = new Blob([response.data], { type: "application/pdf" });
@@ -195,14 +195,23 @@ const PdfGenerate = () => {
 
       const response = await axios.get(
         `http://localhost:4000/api/generatebill/${selectedCustomerId}`,
-        { responseType: "blob" }
+        { responseType: "blob", timeout: 8000 } // 8 second timeout
       );
 
       const blob = new Blob([response.data], {
         type: "application/pdf",
       });
       const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank");
+      // Create a link element, set the filename, and trigger a click to download
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `bill-${selectedCustomer}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
 
       setTimeout(() => window.URL.revokeObjectURL(url), 5000);
 
