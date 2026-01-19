@@ -264,7 +264,7 @@ const CustomerDetails = () => {
   const syncShops = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/getallshopsids",
+        "https://customer-bill-generator-bckend.onrender.com/api/getallshopsids",
         { withCredentials: true }
       );
       const validShopIds = response.data.map((shop) => shop._id);
@@ -277,7 +277,7 @@ const CustomerDetails = () => {
   const fetchShopsName = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:4000/api/getallshopsids",
+        "https://customer-bill-generator-bckend.onrender.com/api/getallshopsids",
         { withCredentials: true }
       );
       const shopNames = response.data.map((shop) => shop.shopName);
