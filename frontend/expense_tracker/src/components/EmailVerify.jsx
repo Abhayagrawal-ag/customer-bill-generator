@@ -70,7 +70,7 @@ const EmailVerify = () => {
         return;
       }
       try {
-        const res = await axios.post("http://localhost:4000/api/verifyEmail", {
+        const res = await axios.post("https://customer-bill-generator-bckend.onrender.com/api/verifyEmail", {
           code: otp,
         });
         setInfo("Email verification successfull");
@@ -104,7 +104,7 @@ const EmailVerify = () => {
     setTimeout(async () => {
       setSpinner(false);
       try {
-        const res = await axios.post("http://localhost:4000/api/resendotp", {
+        const res = await axios.post("https://customer-bill-generator-bckend.onrender.com/api/resendotp", {
           email: Email,
         });
         setInfo("OTP has been resent successfully");
