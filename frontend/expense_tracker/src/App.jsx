@@ -4,7 +4,7 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import Signup from './components/Signup';
-import EmailVerify from './components/emailVerify'
+import EmailVerify from './components/EmailVerify'
 import Login from './components/Login'
 import PasswordResetRequest from './components/PasswordResetRequest'
 import PasswordChange from './components/PasswordChange'
