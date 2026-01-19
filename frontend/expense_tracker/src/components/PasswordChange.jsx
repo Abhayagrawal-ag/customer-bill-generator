@@ -52,7 +52,7 @@ const PasswordChange = () => {
 
       try {
         const res = await axios.post(
-          "http://localhost:4000/api/passwordchange",
+          "https://customer-bill-generator-bckend.onrender.com/api/passwordchange",
           { email, password, confirmPassword }
         );
         setMessage("Password is successfully changed, Now you can login");
