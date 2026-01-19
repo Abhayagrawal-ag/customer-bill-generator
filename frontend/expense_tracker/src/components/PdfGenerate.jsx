@@ -162,7 +162,7 @@ const PdfGenerate = () => {
   const getAllCustomersName = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/getallcustomers/${mainShopId}`,
+        `https://customer-bill-generator-bckend.onrender.com/api/getallcustomers/${mainShopId}`,
         { withCredentials: true }
       );
 
@@ -194,7 +194,7 @@ const PdfGenerate = () => {
       const selectedCustomerId = customerIds[index];
 
       const response = await axios.get(
-        `http://localhost:4000/api/generatebill/${selectedCustomerId}`,
+        `https://customer-bill-generator-bckend.onrender.com/api/generatebill/${selectedCustomerId}`,
         { responseType: "blob", timeout: 8000 } // 8 second timeout
       );
 
