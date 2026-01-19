@@ -47,7 +47,7 @@ const Signup = () => {
         return;
       }
       try {
-        const res = await axios.post("http://localhost:4000/api/register", {
+        const res = await axios.post("https://customer-bill-generator-bckend.onrender.com/api/register", {
           username: name,
           email,
           password,
